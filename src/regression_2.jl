@@ -1,4 +1,6 @@
 begin 
+    using Plots
+    
     """
     The `health` function is not to be used alone. 
     It returns the estimated health transition probabilities for a combination of age, temperature, and previous health state values.
@@ -30,7 +32,7 @@ begin
     """
     function health_transition_3D_plot()
         
-        Plots.plotly()
+        plotly()
         default(fontfamily = "Times")
         
         av_annual_range = range(start = -4.00, stop = 4.00, length = 100)
