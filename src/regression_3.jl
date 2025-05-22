@@ -103,27 +103,6 @@ end
 
 # population_simulation(N = 100, T = 100, weather_history = zeros(100))
 
-# population_pessimistic_scenario     = population_simulation(N = 100, T = 100, weather_history = pessimistic_path)
-# population_intermediate_scenario    = population_simulation(N = 100, T = 100, weather_history = intermediate_path)
-# population_good_scenario            = population_simulation(N = 100, T = 100, weather_history = optimistic_path)
-# 
-# pop_1_2 = produce_population(min_temperature = 0.61, 
-#     max_temperature = 2)
-# pop_2_2 = produce_population(min_temperature = 0.61,
-#     max_temperature = 3)
-# pop_3_2 = produce_population(min_temperature = 0.61,
-#     max_temperature = 4)
-# 
-# populations_2 = [pop_1_2,
-#     pop_2_2,
-#     pop_3_2]
-# 
-# keys(population_pessimistic_scenario)
-# 
-# populations = [population_pessimistic_scenario  
-# population_intermediate_scenario 
-# population_good_scenario         ]
-
 """
 This function is not to be used alone. 
 The `produce_graph` function generates a graph with three different populations with three different 
@@ -167,6 +146,9 @@ end
 
 # produce_graph(populations)
 
+"""
+This function is not to be used alone. 
+"""
 function plot_population_weather(;N::Number, T = 100, weather_histories)
     
     Populations = Array{Any}(undef, length(weather_histories))
@@ -188,7 +170,13 @@ function plot_population_weather(;N::Number, T = 100, weather_histories)
     end
 end
 
-# plot_population_weather(N = 1_000, T = 100, weather_histories = [pessimistic_path, intermediate_path, optimistic_path])
+""" 
+This function plots the demographic path of the four defined trajectories. 
+"""
+function plot_demographic_comparison(;N::Number, T = 100)
+    
+    plot_population_weather(N = N, T = T, weather_histories = [pessimistic_path, intermediate_path, optimistic_path, historical_path])
+end
 
 # savefig("working_elements/Draft/output/figure_3.png")
 

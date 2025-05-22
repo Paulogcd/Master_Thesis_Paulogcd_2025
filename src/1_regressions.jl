@@ -17,9 +17,14 @@ begin
     temperature_data = CSV.read("src/data/temperature.csv", DataFrame)
     Temperature_2018 = temperature_data[temperature_data.Year .== 2018,:av_annual_t]
 
-    pessimistic_path = collect(range(start = 0.5, stop = 4.0, length = 100))
-    intermediate_path = collect(range(start = 0.5, stop = 3.0, length = 100))
-    optimistic_path = collect(range(start = 0.5, stop = 2.0, length = 100))
+    historical_path     = collect(range(start = 0.01, stop = 1.5, length = 100))
+    pessimistic_path    = collect(range(start = 0.5, stop = 4.0, length = 100))
+    intermediate_path   = collect(range(start = 0.5, stop = 3.0, length = 100))
+    optimistic_path     = collect(range(start = 0.5, stop = 2.0, length = 100))
+
+    historical_scenario = hcat(age_range, historical_path)
+    historical_scenario = DataFrame(historical_scenario, :auto)
+    rename!(historical_scenario, ["Age", "Temperature"])
 
     pessimistc_scenario = hcat(age_range, pessimistic_path)
     pessimistc_scenario = DataFrame(pessimistc_scenario, :auto)
@@ -32,6 +37,8 @@ begin
     optimistic_scenario = hcat(age_range, optimistic_path)
     optimistic_scenario = DataFrame(optimistic_scenario, :auto)
     rename!(optimistic_scenario, ["Age", "Temperature"])
+
+    Plots.default(fontfamily = "Times")
     nothing
 end
 
