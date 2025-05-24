@@ -396,7 +396,7 @@ function plot_policy_FOC_1(solution,policy)
             tmax = t + 20
             tmp = zeros(length(s_range))
             for i in t:tmax 
-                tmp .+= labor[]
+                tmp .+= labor
             end
             average = tmp / (tmax-t)
             Plots.plot!(s_range,
@@ -408,7 +408,7 @@ function plot_policy_FOC_1(solution,policy)
 
     Plots.plot!(xaxis = "Initial savings",
                 yaxis = choice_variable,
-                title = "Pure numerical solution", 
+                title = "Labor approximation by FOC",
                 legend = place_legend, 
                 titlefontsize = 40)
     
@@ -431,10 +431,10 @@ function plot_policy_FOC_1(solution,policy)
 end
 
 """
-The `plot_consumption_FOC_1` function generates the plot 
+The `plot_policies_FOC_1` function generates the plot 
 of the policies with an average per age category.
 """
-function plot_consumption_FOC_1(;N=100::Number, weather_history=pessimistic_path::Array{Float64})
+function plot_policies_FOC_1(;N=100::Number, weather_history=pessimistic_path::Array{Float64})
     
     probabilities_survival = deathless_population_simulation(N=N::Int64,
                                     T=100::Int64,
@@ -465,7 +465,7 @@ function plot_consumption_FOC_1(;N=100::Number, weather_history=pessimistic_path
     end
 end
 
-# plot_consumption_FOC_1()
+# plot_policies_FOC_1()
 
 function plot_FOC_1_error(;N=100, weather_history=pessimistic_path::Array{Float64})
 
@@ -502,7 +502,7 @@ function plot_FOC_1_error(;N=100, weather_history=pessimistic_path::Array{Float6
 
 	Plots.plot!(xaxis = "Initial savings",
                 yaxis = "Budget clearing",
-                title = "Pure numerical solution", 
+                title = "Labor approximation by FOC",
                 legend = false, 
                 titlefontsize = 40)
     
