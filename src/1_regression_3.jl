@@ -285,5 +285,5 @@ begin
         end
     end
 
-    # plot_life_probabilities(N = 10_000)
+    # plot_probabilities_comparison(N = 10_000)
 end

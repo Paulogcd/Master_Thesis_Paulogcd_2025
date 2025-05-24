@@ -22,12 +22,27 @@ module Master_Thesis_Paulogcd_2025
     The `run` function generates all plots of the package, in an "output" folder.
     """
     function run() 
+        
+        # Data:
         temperature()
+        
+        # Regressions:
         Health_Proxy_plot()
         health_transition_3D_plot()
         average_health_plot()
-        plot_life_probabilities()
+        plot_probabilities_comparison()
+
+        # Numerical results: 
+        plot_pure_numerical()
+        plot_pure_numerical_error()
+        
+        plot_consumption_FOC_1()
+        plot_FOC_1_error()
+
+        # plot_consumption_FOC_2()
+        # plot_FOC_2_error()
     end
+    @info("run function compiled")
 
     """ 
     The `delete` function deletes the generated plots and results.
@@ -35,14 +50,13 @@ module Master_Thesis_Paulogcd_2025
     """
     function delete()
         if isdir("output")
-            run(`rm -rf output`)
+            Base.run(`rm -rf output`)
             @info("Output folder deleted.")
         else 
             @info("output folder not found.")
         end
     end
-
-    export delete
+    @info("delete function compiled")
 
     @info("Master_Thesis_Paulogcd_2025.jl compiled.")
 

@@ -73,4 +73,8 @@ begin
 	end
 end
 
-include("2_pure_numerical.jl")
+include("2_numerical_methods_1_pure_numerical.jl")
+include("2_numerical_methods_2_FOC_approximated_1.jl")
+include("2_numerical_methods_3_FOC_approximated_2.jl")
+
+@info("2_numerical_methods_0.jl compiled")
