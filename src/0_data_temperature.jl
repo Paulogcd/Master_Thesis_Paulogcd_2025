@@ -5,7 +5,7 @@ begin
         using CSV
         using DataFrames
         using Plots
-        default(fontfamily = "Times")
+        default(;fontfamily = "Times")
     end
 
     """ The `temperature` function returns the plot of average annual 
@@ -30,6 +30,7 @@ begin
             label = "Mean", 
             linewidth = 5)
 
+        default(;fontfamily = "Times")
         Plots.plot!(size = (2400, 1600),
             legendfontsize = 24,
             guidefontsize = 40,
@@ -37,7 +38,8 @@ begin
 
             bottom_margin = 100Plots.px,
             top_margin = 100Plots.px,
-            left_margin = 100Plots.px)
+            left_margin = 100Plots.px, 
+            fontfamily = "Times")
 
         Plots.plot!(xaxis = "Year", yaxis = "Temperature", legend = false)
         if isdir("output")

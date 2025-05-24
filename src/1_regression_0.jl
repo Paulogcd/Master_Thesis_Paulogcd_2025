@@ -42,12 +42,12 @@ begin
     nothing
 end
 
-include("regression_1.jl")
+include("1_regression_1.jl")
 
 # REGRESSION 2: HEALTH
-include("regression_2.jl")
+include("1_regression_2.jl")
 
 # REGRESSION 3: SURVIVAL
-include("regression_3.jl")
+include("1_regression_3.jl")
 
-@info("1_regressions.jl compiled.")
+@info("1_regression_0.jl compiled.")

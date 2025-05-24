@@ -11,12 +11,28 @@ module Master_Thesis_Paulogcd_2025
 
     export temperature
 
-    include("1_regressions.jl")
+    include("1_regression_0.jl")
     export Health_Proxy_plot
     export health_transition_3D_plot
     export average_health_plot
 
+    include("2_numerical_methods_0.jl")
 
+    """
+    The `run` function generates all plots of the package, in an "output" folder.
+    """
+    function run() 
+        temperature()
+        Health_Proxy_plot()
+        health_transition_3D_plot()
+        average_health_plot()
+        plot_life_probabilities()
+    end
+
+    """ 
+    The `delete` function deletes the generated plots and results.
+    It checks if the "output" folder exists, and delete it if it is the case.
+    """
     function delete()
         if isdir("output")
             run(`rm -rf output`)

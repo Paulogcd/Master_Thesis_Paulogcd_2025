@@ -145,7 +145,7 @@ begin
     for the three different temperature scenarios. 
     It takes N and T as arguments, with N the size of the population, and T the number of periods.
     """
-    function average_health_plot(;N::Int64,T::Int64 = 100)
+    function average_health_plot(;N=1_000::Int64,T::Int64 = 100)
 
         gr()
         
