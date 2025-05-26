@@ -4,7 +4,7 @@ It does so by averaging the policies accross all life, from 20 to 100 years old.
 """
 function policy_comparison_plot(;N = 100::Number, paths = [pessimistic_path,intermediate_path,optimistic_path,historical_path])
     
-    numerical_solution = Array{Any}(undef,length(paths))
+    # numerical_solution = Array{Any}(undef,length(paths))
     
     consumption_plot    = Plots.plot(xaxis = "Initial savings", yaxis = "Consumption")
     labour_plot         = Plots.plot(xaxis = "Initial savings", yaxis = "Labour Supply")
@@ -17,7 +17,7 @@ function policy_comparison_plot(;N = 100::Number, paths = [pessimistic_path,inte
     
     colors = Array{Any}(undef,5)
     colors[1:4] .= palette(:RdYlGn_10,4)
-    colors[5] = colorant"blue"
+    colors[5]   = colorant"blue"
     colors = vcat(colors, colorant"blue")
 
     for (path,name,color) in zip(paths,names,colors)

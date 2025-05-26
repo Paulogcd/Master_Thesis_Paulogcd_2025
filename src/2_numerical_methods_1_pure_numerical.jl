@@ -216,6 +216,8 @@ begin
 
 		# Initialization: 
 
+		parameters = (;β,z,ρ,φ,proba_survival,h,w)
+
 		# We define the name of the variables for the named arrays: 
 		param1_names 			= ["t_$i" for i in 1:nperiods]
 		#param2_names 			= ["s_i$i" for i in 1:length(s_range)]
@@ -337,13 +339,13 @@ begin
 		
 
 		if return_full_grid && return_budget_balance
-			return (;V,Vstar,index_optimal_choices,optimal_choices,budget_balance)
+			return (;V,Vstar,index_optimal_choices,optimal_choices,budget_balance,parameters)
 		elseif return_full_grid
-			return (;V,Vstar,index_optimal_choices,optimal_choices)
+			return (;V,Vstar,index_optimal_choices,optimal_choices,parameters)
 		elseif return_budget_balance
-			return (;Vstar,index_optimal_choices,optimal_choices,budget_balance)
+			return (;Vstar,index_optimal_choices,optimal_choices,budget_balance,parameters)
 		else 
-			return (;Vstar,index_optimal_choices,optimal_choices)
+			return (;Vstar,index_optimal_choices,optimal_choices,parameters)
 		end
 
 	end
