@@ -1,10 +1,12 @@
-using JLD2
-using GLM 
-using OrdinalMultinomialModels
-using CSV
-using DataFrames
-using Plots
-using PlotlyJS
+begin 
+    using JLD2
+    using GLM 
+    using OrdinalMultinomialModels
+    using CSV
+    using DataFrames
+    using Plots
+    using PlotlyJS
+end
 
 # INITIALIZATION
 begin 

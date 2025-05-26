@@ -43,10 +43,10 @@ begin
 
         Plots.plot!(xaxis = "Year", yaxis = "Temperature", legend = false)
         if isdir("output")
-            Plots.savefig("output/figure_1.png")
+            Plots.savefig("output/description_Berkeley_data.png")
         else
             mkdir("output")
-            Plots.savefig("output/figure_1.png")
+            Plots.savefig("output/description_Berkeley_data.png")
         end
     end
 

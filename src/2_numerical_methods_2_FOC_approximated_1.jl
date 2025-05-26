@@ -504,7 +504,8 @@ function plot_FOC_1_error(;N=100, weather_history=pessimistic_path::Array{Float6
                 yaxis = "Budget clearing",
                 title = "Labor approximation by FOC",
                 legend = false, 
-                titlefontsize = 40)
+                titlefontsize = 40,
+                ylimits=(-0.1,1))
     
     Plots.plot!(
             size = (2400, 1600),
@@ -524,6 +525,7 @@ function plot_FOC_1_error(;N=100, weather_history=pessimistic_path::Array{Float6
     end
 
 	# mean(numerical_solution.budget_balance)
+    nothing
 end
 
 # plot_FOC_1_error()

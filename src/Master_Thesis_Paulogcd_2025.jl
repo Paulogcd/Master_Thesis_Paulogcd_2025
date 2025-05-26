@@ -18,6 +18,8 @@ module Master_Thesis_Paulogcd_2025
 
     include("2_numerical_methods_0.jl")
 
+    include("3_policy_comparison.jl")
+
     """
     The `run` function generates all plots of the package, in an "output" folder.
     """
@@ -36,11 +38,17 @@ module Master_Thesis_Paulogcd_2025
         plot_pure_numerical()
         plot_pure_numerical_error()
         
-        plot_consumption_FOC_1()
+        plot_policies_FOC_1()
         plot_FOC_1_error()
 
-        # plot_consumption_FOC_2()
-        # plot_FOC_2_error()
+        plot_policies_FOC_2()
+        plot_FOC_2_error()
+
+        # Interpolated grid algorithms:
+        # ...
+
+        # Policy comparison: 
+        policy_comparison_plot()
     end
     @info("run function compiled")
 

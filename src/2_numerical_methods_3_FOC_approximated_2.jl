@@ -450,12 +450,6 @@ function plot_policy_FOC_2(solution,policy)
     end
 end
 
-# keys(FOC_2_solution)
-
-# plot_policy_FOC_2(FOC_2_solution,"c")
-# plot_policy_FOC_2(FOC_2_solution,"l")
-# plot_policy_FOC_2(FOC_2_solution,"sprime")
-
 function plot_policies_FOC_2(;N=100,weather_history=pessimistic_path)
     
     probabilities_survival = deathless_population_simulation(N=N::Int64,
@@ -487,8 +481,6 @@ function plot_policies_FOC_2(;N=100,weather_history=pessimistic_path)
     end
 end
 
-# plot_policies_FOC_2()
-
 function plot_FOC_2_error(;N=100, weather_history=pessimistic_path::Array{Float64})
 
     probabilities_survival = deathless_population_simulation(N=N::Int64,
@@ -514,7 +506,6 @@ function plot_FOC_2_error(;N=100, weather_history=pessimistic_path::Array{Float6
                             h 						= average_health_status::Array{Float64}, 
                             return_full_grid 		= false::Bool, 
                             return_budget_balance 	= true::Bool)
-	# keys(numerical_solution)
 	
 	Plots.plot(s_range,numerical_solution.budget_balance[1,:])
 
@@ -524,9 +515,10 @@ function plot_FOC_2_error(;N=100, weather_history=pessimistic_path::Array{Float6
 
 	Plots.plot!(xaxis = "Initial savings",
                 yaxis = "Budget clearing",
-                title = "Labor approximation by FOC",
+                title = "Consumption approximation by FOC",
                 legend = false, 
-                titlefontsize = 40)
+                titlefontsize = 40, 
+                ylimits=(-0.1,1))
     
     Plots.plot!(
             size = (2400, 1600),
@@ -545,7 +537,7 @@ function plot_FOC_2_error(;N=100, weather_history=pessimistic_path::Array{Float6
         Plots.savefig("output/numerical_FOC_2_approximation_error.png")
     end
 
-	# mean(numerical_solution.budget_balance)
+    nothing
 end
 
 # plot_FOC_2_error()

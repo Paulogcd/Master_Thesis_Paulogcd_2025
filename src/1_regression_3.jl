@@ -286,4 +286,5 @@ begin
     end
 
     # plot_probabilities_comparison(N = 10_000)
+    nothing
 end

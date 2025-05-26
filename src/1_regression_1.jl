@@ -25,10 +25,10 @@ begin
             fontfamily = "Times")
 
         if isdir("output")
-            Plots.savefig("output/figure_2.png")
+            Plots.savefig("output/health_proxy.png")
         else
             mkdir("output")
-            Plots.savefig("output/figure_2.png")
+            Plots.savefig("output/health_proxy.png")
         end
 
     end

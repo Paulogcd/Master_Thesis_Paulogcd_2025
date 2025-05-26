@@ -476,7 +476,8 @@ function plot_pure_numerical_error(;N=100,weather_history=pessimistic_path::Arra
                 yaxis = "Budget clearing",
                 title = "Pure numerical solution", 
                 legend = false, 
-                titlefontsize = 40)
+                titlefontsize = 40, 
+				ylimits=(-0.1,1))
     
     Plots.plot!(
             size = (2400, 1600),

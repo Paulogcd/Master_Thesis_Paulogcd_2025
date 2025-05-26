@@ -161,13 +161,20 @@ begin
                                 T = T::Int64,
                                 weather_history = optimistic_path::Vector{Float64})::NamedTuple
 
+        sim_historical_path = population_health_simulation(;N = N::Int64,
+                                T = T::Int64,
+                                weather_history = historical_path::Vector{Float64})::NamedTuple
+
         average_health_pessimistic  = mean.(sim_pessimistic_path.collective_health_history[t,:] for t in 1:100)
         average_health_intermediate = mean.(sim_intermediate_path.collective_health_history[t,:] for t in 1:100)
         average_health_optimistic   = mean.(sim_optimistic_path.collective_health_history[t,:] for t in 1:100)
+        average_health_historical   = mean.(sim_historical_path.collective_health_history[t,:] for t in 1:100)
 
+        
         Plots.plot(1:100,average_health_optimistic, label       = "Optimistic scenario", linewidth = 5, color = "green")
         Plots.plot!(1:100,average_health_intermediate, label    = "Intermediate scenario", linewidth = 5, color = "orange")
         Plots.plot!(1:100,average_health_pessimistic, label     = "Pessimistic scenario", linewidth = 5, color = "red")
+        Plots.plot!(1:100,average_health_historical, label      = "Historical scenario", linewidth = 5, color = "blue")
 
         Plots.plot!(size = (2400, 1600),
                 legendfontsize = 24,
@@ -191,3 +198,5 @@ begin
     end
     nothing
 end
+
+average_health_plot()

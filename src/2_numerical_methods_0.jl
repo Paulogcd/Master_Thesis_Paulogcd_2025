@@ -71,6 +71,7 @@ begin
 		
         return 100 + ( ((abs(c))^(1-ρ)) / (1-ρ) ) - ξ(w=w,h=h) * ( ((abs(l))^(1+φ)) / (1+φ) )::Float64
 	end
+	nothing
 end
 
 include("2_numerical_methods_1_pure_numerical.jl")
