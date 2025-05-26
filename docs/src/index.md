@@ -21,3 +21,26 @@ using Master_Thesis_Paulogcd_2025
 Master_Thesis_Paulogcd_2025.test() # verifying that the package is loaded
 ```
 
+# Obtaining the results 
+
+The main function of this package is the `run()` function. 
+It calls each function that generates a plot and store the results in an "output" folder. 
+
+```{.julia}
+Master_Thesis_Paulogcd_2025.run()
+```
+
+The default values are used for each function, so that the graphical results can be obtained without too much computation. If you wish to obtain more detailed graphical results, you can specify specific values of $N$ and $T$ when calling each function individually. 
+
+```{.warning}
+Be careful, the functions requiring numerical methods can rapidly involve important computation resources.
+```
+
+# Deleting results
+
+To delete the "output" folder programmtically, you can call the `delete()` function. 
+It deletes recursively all the content of the "output" folder contained in the present working directory. 
+
+```{.julia}
+Master_Thesis_Paulogcd_2025.delete()
+```
