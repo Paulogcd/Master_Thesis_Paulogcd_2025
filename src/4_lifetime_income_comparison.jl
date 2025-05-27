@@ -1,4 +1,9 @@
-function plot_lifetime_income_hand_to_mouth(;N=100, paths = [pessimistic_path,intermediate_path,optimistic_path,historical_path])
+function plot_lifetime_income_hand_to_mouth(;N=100, 
+            T = 100, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range,
+            paths = [pessimistic_path,intermediate_path,optimistic_path,historical_path])
     
     names = ["Pessimistic path", "Intermediate path", "Optimistic path", "Historical path"]
     
@@ -6,7 +11,7 @@ function plot_lifetime_income_hand_to_mouth(;N=100, paths = [pessimistic_path,in
 
     lifetime_income = zeros(4)
 
-    other = Array{Any}(undef,4)
+    # other = Array{Any}(undef,4)
 
     i = 1
 
@@ -18,22 +23,22 @@ function plot_lifetime_income_hand_to_mouth(;N=100, paths = [pessimistic_path,in
     for (color,name,path) in zip(colors,names,paths)
         
         probabilities_survival = deathless_population_simulation(N=N::Int64,
-                                            T=100::Int64,
+                                            T=T::Int64,
                                             weather_history=path)
 
-        average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:100)
+        average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:T)
 
-        average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
+        average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
 
         solution = backwards_numerical(
                                 s_range                 = s_range,
-                                sprime_range            = s_range,
+                                sprime_range            = sprime_range,
                                 consumption_range       = consumption_range,
                                 labor_range             = labor_range,
-                                nperiods                = 100,
-                                z 						= ones(100),
+                                nperiods                = T,
+                                z 						= ones(T),
                                 β 						= 0.98,
-                                r 						= 0.017 .* ones(100),
+                                r 						= 0.017 .* ones(T),
                                 ρ 						= 1.50, 
                                 φ 						= 2.00,
                                 proba_survival 			= average_survival_probabilities::Array{Float64},
@@ -48,7 +53,7 @@ function plot_lifetime_income_hand_to_mouth(;N=100, paths = [pessimistic_path,in
         tmp = zeros(81)
         cumulated = zeros(81)
         j = 1
-        for t in 20:100
+        for t in 20:T
             tmp[j] = solution.parameters.β ^(t-20) * 
                 solution.optimal_choices[t,1,"l"] *
                 solution.parameters.z[t] .*
@@ -57,9 +62,9 @@ function plot_lifetime_income_hand_to_mouth(;N=100, paths = [pessimistic_path,in
             j += 1
         end
         lifetime_income[i] = cumulated[end]
-        other[i] = solution.optimal_choices[:,1,"l"]
+        # other[i] = solution.optimal_choices[:,1,"l"]
         
-        Plots.plot!(p,20:100,cumulated, label = name, color = color, linewidth=5)
+        Plots.plot!(p,20:T,cumulated, label = name, color = color, linewidth=5)
         i += 1
     end
     
@@ -85,11 +90,15 @@ function plot_lifetime_income_hand_to_mouth(;N=100, paths = [pessimistic_path,in
     end
 end
 
-plot_lifetime_income_hand_to_mouth()
+# plot_lifetime_income_hand_to_mouth()
 
 ### 
 
-function plot_lifetime_rich(;N=100, paths = [pessimistic_path,intermediate_path,optimistic_path,historical_path])
+function plot_lifetime_rich(;N = 100, T = 100, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range, 
+            paths = [pessimistic_path,intermediate_path,optimistic_path,historical_path])
     
     names = ["Pessimistic path", "Intermediate path", "Optimistic path", "Historical path"]
     
@@ -98,7 +107,7 @@ function plot_lifetime_rich(;N=100, paths = [pessimistic_path,intermediate_path,
 
     lifetime_income = zeros(4)
 
-    other = Array{Any}(undef,4)
+    # other = Array{Any}(undef,4)
 
     i = 1
 
@@ -113,22 +122,22 @@ function plot_lifetime_rich(;N=100, paths = [pessimistic_path,intermediate_path,
         
 
         probabilities_survival = deathless_population_simulation(N=N::Int64,
-                                            T=100::Int64,
+                                            T=T::Int64,
                                             weather_history=path)
 
-        average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:100)
+        average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:T)
 
-        average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
+        average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
 
         solution = backwards_numerical(
                                 s_range                 = s_range,
                                 sprime_range            = s_range,
                                 consumption_range       = consumption_range,
                                 labor_range             = labor_range,
-                                nperiods                = 100,
-                                z 						= ones(100),
+                                nperiods                = T,
+                                z 						= ones(T),
                                 β 						= 0.98,
-                                r 						= 0.017 .* ones(100),
+                                r 						= 0.017 .* ones(T),
                                 ρ 						= 1.50, 
                                 φ 						= 2.00,
                                 proba_survival 			= average_survival_probabilities::Array{Float64},
@@ -142,7 +151,7 @@ function plot_lifetime_rich(;N=100, paths = [pessimistic_path,intermediate_path,
 
         findnearest(A::AbstractArray,t) = findmin(abs.(A.-t))
 
-        for (j,t) in enumerate(20:100)
+        for (j,t) in enumerate(20:T)
             
             if t == 20
                 
@@ -175,10 +184,9 @@ function plot_lifetime_rich(;N=100, paths = [pessimistic_path,intermediate_path,
         end
         lifetime_income[i] = cumulated[end]
         
-        Plots.plot!(p, 20:100,cumulated, label = name, color = color, linewidth = 5)
-        Plots.plot!(labor_plot, 20:100,labor_decisions[i,:], label = name, color = color, linewidth = 5)
+        Plots.plot!(p, 20:T,cumulated, label = name, color = color, linewidth = 5)
+        Plots.plot!(labor_plot, 20:T,labor_decisions[i,:], label = name, color = color, linewidth = 5)
         #20:100,, label = name, color = color, linewidth = 5)
-        
         
         i += 1
     end
@@ -200,6 +208,7 @@ function plot_lifetime_rich(;N=100, paths = [pessimistic_path,intermediate_path,
                 legendfontsize = 40,
                 guidefontsize = 40,
                 tickfontsize = 40,
+                legend = :bottomright,
 
                 bottom_margin = 100Plots.px,
                 top_margin = 100Plots.px,
@@ -217,5 +226,5 @@ function plot_lifetime_rich(;N=100, paths = [pessimistic_path,intermediate_path,
     end
 end
 
-a = plot_lifetime_rich()
-Plots.plot(a)
+# a = plot_lifetime_rich()
+# Plots.plot(a)

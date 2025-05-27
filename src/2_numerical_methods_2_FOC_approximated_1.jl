@@ -18,9 +18,12 @@ The `Bellman_FOC_1` function is not to be used alone, but with the `backwards` f
                 return_budget_balance = true::Bool)::NamedTuple
 
 """
-function Bellman_FOC_1(;s_range::AbstractRange,
-                    sprime_range::AbstractRange,
-                    consumption_range::AbstractRange,
+function Bellman_FOC_1(;s_range             = s_range,
+                    sprime_range        = sprime_range,
+                    # labor_range         = labor_range,
+                    consumption_range   = consumption_range::AbstractRange,
+                    # sprime_range::AbstractRange,
+                    # consumption_range::AbstractRange,
                     # labor_range::AbstractRange,
                     value_function_nextperiod::Any,
                     β 					= 0.96::Float64, 
@@ -28,7 +31,7 @@ function Bellman_FOC_1(;s_range::AbstractRange,
                     ρ 					= 1.5::Float64,
                     φ 					= 2.00::Float64,
                     proba_survival 		= 0.90::Float64,
-                    r 					= ((1-0.9)/0.9)::Float64,
+                    r 					= r::Float64,
                     w 					= 0.00::Float64,
                     h 					= 2.00::Float64,
                     ξ 					= 1.00::Float64,
@@ -199,9 +202,13 @@ end
             return_full_grid = false::Bool, 
             return_budget_balance = true::Bool)::NamedTuple
 """
-function backwards_FOC_1(;s_range::AbstractRange,
-            sprime_range::AbstractRange,
-            consumption_range::AbstractRange,
+function backwards_FOC_1(;s_range             = s_range,
+            sprime_range        = sprime_range,
+            # labor_range         = labor_range,
+            consumption_range   = consumption_range,
+            # s_range::AbstractRange,
+            # sprime_range::AbstractRange,
+            # consumption_range::AbstractRange,
             nperiods::Integer,
             z 						= ones(nperiods)::Array{Float64},
             β 						= 0.90::Float64,
@@ -434,24 +441,31 @@ end
 The `plot_policies_FOC_1` function generates the plot 
 of the policies with an average per age category.
 """
-function plot_policies_FOC_1(;N=100::Number, weather_history=pessimistic_path::Array{Float64})
+function plot_policies_FOC_1(;
+            s_range             = s_range,
+            sprime_range        = sprime_range,
+            labor_range         = labor_range,
+            consumption_range   = consumption_range, 
+            N = 100::Number, 
+            T = 100, 
+            weather_history=pessimistic_path::Array{Float64})
     
     probabilities_survival = deathless_population_simulation(N=N::Int64,
-                                    T=100::Int64,
+                                    T=T::Int64,
                                     weather_history=weather_history)
 
-    average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:100)
+    average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:T)
 
-    average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
+    average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
 
-    FOC_1_solution = backwards_FOC_1(s_range = s_range,
-                            sprime_range            = s_range,
+    FOC_1_solution = backwards_FOC_1(s_range        = s_range,
+                            sprime_range            = sprime_range,
                             consumption_range       = consumption_range,
                             # labor_range             = labor_range,
-                            nperiods                = 100,
-                            z 						= ones(100),
+                            nperiods                = T,
+                            z 						= ones(T),
                             β 						= 0.98,
-                            r 						= 0.017 .* ones(100),
+                            r 						= 0.017 .* ones(T),
                             ρ 						= 1.50, 
                             φ 						= 2.00,
                             proba_survival 			= average_survival_probabilities::Array{Float64},
@@ -467,24 +481,30 @@ end
 
 # plot_policies_FOC_1()
 
-function plot_FOC_1_error(;N=100, weather_history=pessimistic_path::Array{Float64})
+function plot_FOC_1_error(;
+            s_range             = s_range,
+            sprime_range        = sprime_range,
+            labor_range         = labor_range,
+            consumption_range   = consumption_range,
+            N=100, T = 100,
+            weather_history=pessimistic_path::Array{Float64})
 
     probabilities_survival = deathless_population_simulation(N=N::Int64,
-                                    T=100::Int64,
+                                    T=T::Int64,
                                     weather_history=weather_history)
 
-    average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:100)
+    average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:T)
 
-    average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
+    average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
 	
     numerical_solution = backwards_FOC_1(s_range = s_range,
-                            sprime_range            = s_range,
+                            sprime_range            = sprime_range,
                             consumption_range       = consumption_range,
                             # labor_range             = labor_range,
-                            nperiods                = 100,
-                            z 						= ones(100),
+                            nperiods                = T,
+                            z 						= ones(T),
                             β 						= 0.98,
-                            r 						= 0.017 .* ones(100),
+                            r 						= 0.017 .* ones(T),
                             ρ 						= 1.50, 
                             φ 						= 2.00,
                             proba_survival 			= average_survival_probabilities::Array{Float64},

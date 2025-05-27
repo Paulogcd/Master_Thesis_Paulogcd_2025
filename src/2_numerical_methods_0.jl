@@ -1,10 +1,13 @@
 # Parameters
 begin 
-    s_range             = (range(start = 0.00, stop = 3.00, length = 30))
-    consumption_range   = (range(start = 0.00, stop = 3.00, length = 30))
-    labor_range         = (range(start = 0.00, stop = 3.00, length = 30))
+    scale = 0.8
+	s_range             = (range(start = 0.00, stop = 2.00, length = Integer(round(scale * 100))))
+	sprime_range		= (range(start = 0.00, stop = 2.00, length = Integer(round(scale * 100))))
+    consumption_range   = (range(start = 0.00, stop = 2.50, length = Integer(round(scale * 125))))
+    labor_range         = (range(start = 0.00, stop = 1.50, length = Integer(round(scale * 75))))
     ρ                   = 1.50
     φ                   = 2.00
+	r 					= 0.017
 end
 
 # Secondary functions: 

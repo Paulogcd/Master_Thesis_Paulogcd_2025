@@ -2,7 +2,12 @@
 The `policy_comparison_plot` function generates plots displaying the policy functions with different temperature scenarios.
 It does so by averaging the policies accross all life, from 20 to 100 years old. 
 """
-function policy_comparison_plot(;N = 100::Number, paths = [pessimistic_path,intermediate_path,optimistic_path,historical_path])
+function policy_comparison_plot(;N = 100::Number,
+            T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range,
+            paths = [pessimistic_path,intermediate_path,optimistic_path,historical_path])
     
     # numerical_solution = Array{Any}(undef,length(paths))
     
@@ -23,21 +28,21 @@ function policy_comparison_plot(;N = 100::Number, paths = [pessimistic_path,inte
     for (path,name,color) in zip(paths,names,colors)
 
         probabilities_survival = deathless_population_simulation(N=N::Int64,
-                                        T=100::Int64,
+                                        T=T::Int64,
                                         weather_history=path)
 
-        average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:100)
+        average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:T)
 
-        average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
+        average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
         
         numerical_solution = backwards_numerical(s_range = s_range,
-                                sprime_range            = s_range,
+                                sprime_range            = sprime_range,
                                 consumption_range       = consumption_range,
                                 labor_range             = labor_range,
-                                nperiods                = 100,
-                                z 						= ones(100),
+                                nperiods                = T,
+                                z 						= ones(T),
                                 β 						= 0.98,
-                                r 						= 0.017 .* ones(100),
+                                r 						= 0.017 .* ones(T),
                                 ρ 						= 1.50, 
                                 φ 						= 2.00,
                                 proba_survival 			= average_survival_probabilities::Array{Float64},
@@ -47,14 +52,14 @@ function policy_comparison_plot(;N = 100::Number, paths = [pessimistic_path,inte
                                 return_budget_balance 	= true::Bool)
     
         for (plot,policy) in zip(plots,policies)
-                tmax = 100
+                tmax = T
                 tmp = zeros(length(s_range))
                 
                 for i in 20:tmax 
                     tmp += numerical_solution[:optimal_choices][i,:,policy]
                 end
                 
-                average = tmp / (100-20)
+                average = tmp / (tmax-20)
                 
                 Plots.plot!(plot, 
                             s_range,

@@ -11,6 +11,7 @@ module Master_Thesis_Paulogcd_2025
 
     export temperature
 
+    using PlotlyKaleido
     include("1_regression_0.jl")
     export Health_Proxy_plot
     export health_transition_3D_plot
@@ -20,43 +21,102 @@ module Master_Thesis_Paulogcd_2025
 
     include("3_policy_comparison.jl")
 
+    include("4_lifetime_income_comparison.jl")
+
     include("extra_health_survival.jl")
 
     """
     The `run` function generates all plots of the package, in an "output" folder.
     """
-    function run() 
+    function run(;N = 100, T = 100,
+            s_range             = s_range,
+            sprime_range        = sprime_range,
+            labor_range         = labor_range,
+            consumption_range   = consumption_range) 
+        @time let
         
         # Data:
-        temperature()
+        @info("Plotting temperature data.")
+        @time temperature()
         
         # Regressions:
-        Health_Proxy_plot()
-        health_transition_3D_plot()
-        average_health_plot()
-        plot_probabilities_comparison()
-        plot_demographic_comparison()
+        @info("Plotting health proxy.")
+        @time Health_Proxy_plot()
+        @info("Plotting health transition.")
+        @time health_transition_3D_plot()
+        @info("Plotting health average.")
+        @time average_health_plot()
+        @info("Plotting probabilities comparison.")
+        @time plot_probabilities_comparison()
+        @info("Plotting demographic comparison.")
+        @time plot_demographic_comparison()
         
         # One path: 
-        plot_probability_one_path()
-        plot_population_one_path()
-        extra_health_survival()
+        @info("Plotting probabilities of one path.")
+        @time plot_probability_one_path()
+        @info("Plotting demographics of one path.")
+        @time plot_population_one_path()
+        @info("Plotting extra plot of survival by health status.")
+        @time extra_health_survival()
 
-        # Numerical results: 
-        plot_pure_numerical()
-        plot_pure_numerical_error()
+        # Numerical results:
+        @info("Plotting pure numerical results.")
+        @time plot_pure_numerical(;N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range)
+        @time plot_pure_numerical_error(;N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range)
         
-        plot_policies_FOC_1()
-        plot_FOC_1_error()
+        @info("Plotting FOC-1 results.")
+        @time plot_policies_FOC_1(;N = N, T = T,
+            s_range = s_range,
+            sprime_range = sprime_range,
+            # labor_range = labor_range,
+            consumption_range = consumption_range)
+        @time plot_FOC_1_error(;N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            # labor_range = labor_range,
+            consumption_range = consumption_range)
 
-        plot_policies_FOC_2()
-        plot_FOC_2_error()
+        @info("Plotting FOC-2 results.")
+        @time plot_policies_FOC_2(;N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range#,
+            #consumption_range = consumption_range
+            )
+        @time plot_FOC_2_error(N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range#,
+            # consumption_range = consumption_range
+            )
 
         # Interpolated grid algorithms:
         # ...
 
         # Policy comparison: 
-        policy_comparison_plot()
+        @info("Plotting policy comparison results.")
+        @time policy_comparison_plot(N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range)
+
+        # Lifetime income:
+        @info("Plotting hand-to-mouth lifetime income.")
+        @time plot_lifetime_income_hand_to_mouth(N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range)
+        
+        @info("Plotting rich lifetime income.")
+        @time plot_lifetime_rich(N = N, T = T, s_range = s_range,
+            sprime_range = sprime_range,
+            labor_range = labor_range,
+            consumption_range = consumption_range)
+        end
+        @info("All plots have been generated.")
     end
     @info("run function compiled")
 
