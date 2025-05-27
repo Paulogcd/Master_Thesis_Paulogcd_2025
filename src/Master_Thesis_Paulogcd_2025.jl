@@ -20,6 +20,8 @@ module Master_Thesis_Paulogcd_2025
 
     include("3_policy_comparison.jl")
 
+    include("extra_health_survival.jl")
+
     """
     The `run` function generates all plots of the package, in an "output" folder.
     """
@@ -33,6 +35,12 @@ module Master_Thesis_Paulogcd_2025
         health_transition_3D_plot()
         average_health_plot()
         plot_probabilities_comparison()
+        plot_demographic_comparison()
+        
+        # One path: 
+        plot_probability_one_path()
+        plot_population_one_path()
+        extra_health_survival()
 
         # Numerical results: 
         plot_pure_numerical()

@@ -62,3 +62,4 @@ function extra_health_survival()
         Plots.savefig(p, "output/extra_health_survival_plot.png")
     end
 end
+# extra_health_survival()

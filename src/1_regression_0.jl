@@ -39,7 +39,7 @@ begin
     optimistic_scenario = hcat(age_range, optimistic_path)
     optimistic_scenario = DataFrame(optimistic_scenario, :auto)
     rename!(optimistic_scenario, ["Age", "Temperature"])
-
+    
     Plots.default(fontfamily = "Times")
     nothing
 end

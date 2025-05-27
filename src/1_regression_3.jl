@@ -288,3 +288,59 @@ begin
     # plot_probabilities_comparison(N = 10_000)
     nothing
 end
+
+# Simple scenario plot: 
+begin 
+    function plot_population_one_path(;N=100, T=100)
+        population = population_simulation(;N = N,T = T, weather_history= 0.61 .* ones(T))
+        Plots.plot(sum(population.collective_living_history), linewidth = 5)
+        
+        Plots.plot!(xaxis = "Year", yaxis = "Population", legend = false)
+
+        Plots.plot!(
+            size = (2400, 1600),
+            legendfontsize = 40,
+            guidefontsize = 40,
+            tickfontsize = 40,
+
+            bottom_margin = 100Plots.px,
+            top_margin = 100Plots.px,
+            left_margin = 100Plots.px, 
+            fontfamily = "Times")
+        
+        if isdir("output")
+            Plots.savefig("output/population_one_path.png")
+        else
+            mkdir("output")
+            Plots.savefig("output/population_one_path.png")
+        end
+    end
+    #  plot_population_evolution(N = 10_000)
+
+    function plot_probability_one_path()
+        population = deathless_population_simulation(N = 100, weather_history = 0.61 .* ones(100))
+        
+        Plots.plot(mean(population.collective_probability_history[:,t] for t in 1:100), linewidth=5)
+
+        Plots.plot!(xaxis = "Year", yaxis = "Survival probability", legend = false)
+
+        Plots.plot!(
+            size = (2400, 1600),
+            legendfontsize = 40,
+            guidefontsize = 40,
+            tickfontsize = 40,
+
+            bottom_margin = 100Plots.px,
+            top_margin = 100Plots.px,
+            left_margin = 100Plots.px, 
+            fontfamily = "Times")
+
+        if isdir("output")
+            Plots.savefig("output/probabilities_one_path.png")
+        else
+            mkdir("output")
+            Plots.savefig("output/probabilities_one_path.png")
+        end
+    end
+    # plot_probability_one_path()
+end
