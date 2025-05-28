@@ -1,10 +1,10 @@
 # Parameters
 begin 
-    scale = 0.8
-	s_range             = (range(start = 0.00, stop = 2.00, length = Integer(round(scale * 100))))
-	sprime_range		= (range(start = 0.00, stop = 2.00, length = Integer(round(scale * 100))))
-    consumption_range   = (range(start = 0.00, stop = 2.50, length = Integer(round(scale * 125))))
-    labor_range         = (range(start = 0.00, stop = 1.50, length = Integer(round(scale * 75))))
+    granularity = 0.8 # 0.2 # max is 0.8, # 0.2 is too false to be accepted.
+	s_range             = (range(start = 0.00, stop = 100.00, length 	= Integer(round(granularity * 100))))
+	sprime_range		= (range(start = 0.00, stop = 100.00, length 	= Integer(round(granularity * 100))))
+    consumption_range   = (range(start = 0.00, stop = 10.00, length 	= Integer(round(granularity * 100))))
+    labor_range         = (range(start = 0.00, stop = 1.50, length 		= Integer(round(granularity * 100))))
     ρ                   = 1.50
     φ                   = 2.00
 	r 					= 0.017
@@ -77,8 +77,15 @@ begin
 	nothing
 end
 
+using Interpolations
+
 include("2_numerical_methods_1_pure_numerical.jl")
+include("2_numerical_methods_1_pure_numerical_interpolated.jl")
+
 include("2_numerical_methods_2_FOC_approximated_1.jl")
+include("2_numerical_methods_2_FOC_approximated_1_interpolated.jl")
+
 include("2_numerical_methods_3_FOC_approximated_2.jl")
+include("2_numerical_methods_3_FOC_approximated_2_interpolated.jl")
 
 @info("2_numerical_methods_0.jl compiled")

@@ -524,8 +524,8 @@ function plot_FOC_1_error(;
                 yaxis = "Budget clearing",
                 title = "Labor approximation by FOC",
                 legend = false, 
-                titlefontsize = 40,
-                ylimits=(-0.1,1))
+                titlefontsize = 40)#,
+                # ylimits=(-0.1,1))
     
     Plots.plot!(
             size = (2400, 1600),

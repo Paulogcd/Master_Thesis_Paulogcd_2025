@@ -1,11 +1,7 @@
-let
-    using NamedArrays
-end
-
 """
 	 The `Bellman_numerical` function is not to be used alone, but with the `backwards` function.
 	 
-			function Bellman_numerical(;s_range::AbstractRange,
+			function Bellman_numerical_interpolated(;s_range::AbstractRange,
 						sprime_range::AbstractRange,
 						consumption_range::AbstractRange,
 						labor_range::AbstractRange,
@@ -22,7 +18,7 @@ end
 						return_budget_balance = true::Bool)::NamedTuple
 	 
 	 """
-	function Bellman_numerical(;s_range		= s_range::AbstractRange,
+	function Bellman_numerical_interpolated(;s_range		= s_range::AbstractRange,
 						sprime_range		= s_range::AbstractRange,
 						consumption_range	= consumption_range::AbstractRange,
 						labor_range 		= labor_range::AbstractRange,
@@ -62,6 +58,10 @@ end
 			budget_balance = Array{Float64}(undef,
 											length(s_range))
 		end
+
+        # Interpolation: 
+        vitp = interpolate((s_range,), value_function_nextperiod, Gridded(Linear()))
+        vitp = extrapolate(vitp, Interpolations.Flat())
 
 		# for all levels of endowment
 		for (index_s,s) in enumerate(s_range)
@@ -116,7 +116,7 @@ end
 										h = h,
 										ρ = ρ,
 										φ = φ) +
-										β * proba_survival * value_function_nextperiod[index_sprime]
+										β * proba_survival * vitp(index_sprime)
 						end
 					end # end of sprime loop
 				end # end of labor loop
@@ -198,7 +198,7 @@ begin
 				return_full_grid = false::Bool, 
 				return_budget_balance = true::Bool)::NamedTuple
 	"""
-	function backwards_numerical(;s_range 	= s_range::AbstractRange,
+	function backwards_numerical_interpolated(;s_range 	= s_range::AbstractRange,
 				sprime_range 				= s_range::AbstractRange,
 				consumption_range 			= consumption_range::AbstractRange,
 				labor_range 				= labor_range::AbstractRange,
@@ -258,7 +258,7 @@ begin
 		optimal_choices 	= NamedArray(optimal_choices,(param1_names,savings_value,choice_variable_name))
 
 		# First, we solve for the last period, in which the value function of next period is 0: 
-		last_Bellman = Bellman_numerical(s_range 		= s_range::AbstractRange,
+		last_Bellman = Bellman_numerical_interpolated(s_range 		= s_range::AbstractRange,
 	 					sprime_range 		= sprime_range::AbstractRange,
 	 					consumption_range 	= consumption_range::AbstractRange,
 	 					labor_range 		= labor_range::AbstractRange,
@@ -296,7 +296,7 @@ begin
 		
 		for index_time in (nperiods-1):-1:1
 			
-			tmp = Bellman_numerical(s_range 				= s_range,
+			tmp = Bellman_numerical_interpolated(s_range 				= s_range,
 					sprime_range 				= sprime_range,
 					consumption_range 			= consumption_range,
 					labor_range 				= labor_range,
@@ -352,7 +352,7 @@ begin
 end
 
 # numerical_solution
-function plot_policy_full_numerical(solution,policy)
+function plot_policy_full_numerical_interpolated(solution,policy)
 
     if policy == "c"        
         choice_variable = "Consumption"
@@ -385,7 +385,7 @@ function plot_policy_full_numerical(solution,policy)
 
     Plots.plot!(xaxis = "Initial savings",
                 yaxis = choice_variable,
-                title = "Pure numerical solution", 
+                title = "Pure numerical solution - Interpolated", 
                 legend = place_legend, 
                 titlefontsize = 40)
     
@@ -400,18 +400,18 @@ function plot_policy_full_numerical(solution,policy)
             left_margin = 100Plots.px)
 
     if isdir("output")
-        Plots.savefig("output/numerical_pure_numerical_$choice_variable.png")
+        Plots.savefig("output/numerical_pure_numerical_interpolated_$choice_variable.png")
     else
         mkdir("output")
-        Plots.savefig("output/numerical_pure_numerical_$choice_variable.png")
+        Plots.savefig("output/numerical_pure_numerical_interpolated_$choice_variable.png")
     end
 end
 
 """
-The `plot_consumption_pure_numerical` function generates the plot 
+The `plot_pure_numerical_interpolated` function generates the plot 
 of the policies with an average per age category.
 """
-function plot_pure_numerical(;N=100::Number, T = 100, weather_history=pessimistic_path::Array{Float64},
+function plot_pure_numerical_interpolated(;N=100::Number, T = 100, weather_history=pessimistic_path::Array{Float64},
 							s_range = s_range,
 							sprime_range = sprime_range, 
 							consumption_range = consumption_range,
@@ -425,7 +425,7 @@ function plot_pure_numerical(;N=100::Number, T = 100, weather_history=pessimisti
 
     average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
 
-    numerical_solution = backwards_numerical(s_range = s_range,
+    numerical_solution = backwards_numerical_interpolated(s_range = s_range,
                             sprime_range            = sprime_range,
                             consumption_range       = consumption_range,
                             labor_range             = labor_range,
@@ -441,14 +441,13 @@ function plot_pure_numerical(;N=100::Number, T = 100, weather_history=pessimisti
                             return_full_grid 		= false::Bool, 
                             return_budget_balance 	= true::Bool)
     for policy in ["c","l","sprime"]
-        plot_policy_full_numerical(numerical_solution,policy)
+        plot_policy_full_numerical_interpolated(numerical_solution,policy)
     end
 
-	error_plot = Plots.plot(s_range,numerical_solution.budget_balance[1,:])
+    error_plot = Plots.plot(s_range,numerical_solution.budget_balance[1,:])
 
 	for t in 2:T
-		Plots.plot!(error_plot, 
-		s_range,numerical_solution.budget_balance[t,:], label = "Period: $t", linewidth=5)
+		Plots.plot!(error_plot, s_range,numerical_solution.budget_balance[t,:], label = "Period: $t", linewidth=5)
 	end
 
 	Plots.plot!(xaxis = "Initial savings",
@@ -469,16 +468,14 @@ function plot_pure_numerical(;N=100::Number, T = 100, weather_history=pessimisti
             left_margin = 100Plots.px)
 	
 	if isdir("output")
-        Plots.savefig("output/numerical_pure_numerical_error.png")
+        Plots.savefig("output/numerical_pure_numerical_interpolated_error.png")
     else
         mkdir("output")
-        Plots.savefig("output/numerical_pure_numerical_error.png")
+        Plots.savefig("output/numerical_pure_numerical_interpolated_error.png")
     end
-
-
 end
 
-# function plot_pure_numerical_error(;N=100,T = 100, weather_history=pessimistic_path::Array{Float64}, 
+# function plot_pure_numerical_error_interpolated(;N=100,T = 100, weather_history=pessimistic_path::Array{Float64}, 
 # 			s_range             = s_range,
 #             sprime_range        = sprime_range,
 #             labor_range         = labor_range,
@@ -492,7 +489,7 @@ end
 # 
 #     average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
 # 
-# 	numerical_solution = backwards_numerical(s_range = s_range,
+# 	numerical_solution = backwards_numerical_interpolated(s_range = s_range,
 #                             sprime_range            = sprime_range,
 #                             consumption_range       = consumption_range,
 #                             labor_range             = labor_range,
@@ -512,8 +509,7 @@ end
 # 	error_plot = Plots.plot(s_range,numerical_solution.budget_balance[1,:])
 # 
 # 	for t in 2:T
-# 		Plots.plot!(error_plot, 
-# 		s_range,numerical_solution.budget_balance[t,:], label = "Period: $t", linewidth=5)
+# 		Plots.plot!(error_plot, s_range,numerical_solution.budget_balance[t,:], label = "Period: $t", linewidth=5)
 # 	end
 # 
 # 	Plots.plot!(xaxis = "Initial savings",
@@ -534,10 +530,10 @@ end
 #             left_margin = 100Plots.px)
 # 	
 # 	if isdir("output")
-#         Plots.savefig("output/numerical_pure_numerical_error.png")
+#         Plots.savefig("output/numerical_pure_numerical_interpolated_error.png")
 #     else
 #         mkdir("output")
-#         Plots.savefig("output/numerical_pure_numerical_error.png")
+#         Plots.savefig("output/numerical_pure_numerical_interpolated_error.png")
 #     end
 # 
 # 	# mean(numerical_solution.budget_balance)

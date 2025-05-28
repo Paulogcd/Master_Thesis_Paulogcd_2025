@@ -2,7 +2,7 @@
 """
 The `Bellman_FOC_2` function is not to be used alone, but with the `backwards` function.
 
-    function Bellman_FOC_2(;s_range::AbstractRange,
+    function Bellman_FOC_2_interpolated(;s_range::AbstractRange,
                 sprime_range::AbstractRange,
                 consumption_range::AbstractRange,
                 labor_range::AbstractRange,
@@ -19,7 +19,7 @@ The `Bellman_FOC_2` function is not to be used alone, but with the `backwards` f
                 return_budget_balance = true::Bool)::NamedTuple
 
 """
-function Bellman_FOC_2(;s_range = s_range,
+function  Bellman_FOC_2_interpolated(;s_range = s_range,
                     sprime_range = sprime_range,
                     labor_range = labor_range,
                     # consumption_range = consumption_range,
@@ -67,6 +67,10 @@ function Bellman_FOC_2(;s_range = s_range,
         budget_balance = Array{Float64}(undef,
                                         length(s_range))
     end
+    
+    # Interpolation: 
+    vitp = interpolate((s_range,), value_function_nextperiod, Gridded(Linear()))
+    vitp = extrapolate(vitp, Interpolations.Flat())
 
     # for all levels of endowment
     for (index_s,s) in enumerate(s_range)
@@ -121,7 +125,7 @@ function Bellman_FOC_2(;s_range = s_range,
                                     h = h,
                                     ρ = ρ,
                                     φ = φ) +
-                                    β * proba_survival * value_function_nextperiod[index_sprime]
+                                    β * proba_survival * vitp(index_sprime)
                     end
                 end # end of sprime loop
             end # end of labor loop
@@ -211,7 +215,7 @@ function backwards_FOC_2(;s_range::AbstractRange,
         return_full_grid = false::Bool, 
         return_budget_balance = true::Bool)::NamedTuple
 """
-function backwards_FOC_2(;s_range = s_range,
+function backwards_FOC_2_interpolated(;s_range = s_range,
             sprime_range = sprime_range,
             labor_range = labor_range,
             # consumption_range = consumption_range,
@@ -286,7 +290,7 @@ function backwards_FOC_2(;s_range = s_range,
                     choice_variable_name))
 
     # First, we solve for the last period, in which the value function of next period is 0: 
-    last_Bellman = Bellman_FOC_2(s_range 		= s_range::AbstractRange,
+    last_Bellman = Bellman_FOC_2_interpolated(s_range 		= s_range::AbstractRange,
                     sprime_range 		= sprime_range::AbstractRange,
                     # consumption_range 	= consumption_range::AbstractRange,
                     labor_range 		= labor_range::AbstractRange,
@@ -324,7 +328,7 @@ function backwards_FOC_2(;s_range = s_range,
     
     for index_time in (nperiods-1):-1:1
         
-        tmp = Bellman_FOC_2(s_range 		= s_range,
+        tmp = Bellman_FOC_2_interpolated(s_range 		= s_range,
                 sprime_range 				= sprime_range,
                 # consumption_range 			= consumption_range,
                 labor_range 				= labor_range,
@@ -381,7 +385,7 @@ end
 # FOC_2_solution
 # solution = FOC_2_solution
 
-function plot_policy_FOC_2(solution,policy)
+function plot_policy_FOC_2_interpolated(solution,policy)
     
     if policy == "c"        
         choice_variable = "Consumption"
@@ -451,14 +455,14 @@ function plot_policy_FOC_2(solution,policy)
             left_margin = 100Plots.px)
 
     if isdir("output")
-        Plots.savefig("output/numerical_FOC_2_approximation_$choice_variable.png")
+        Plots.savefig("output/numerical_FOC_2_approximation_interpolated_$choice_variable.png")
     else
         mkdir("output")
-        Plots.savefig("output/numerical_FOC_2_approximation_$choice_variable.png")
+        Plots.savefig("output/numerical_FOC_2_approximation_interpolated_$choice_variable.png")
     end
 end
 
-function plot_policies_FOC_2(;
+function plot_policies_FOC_2_interpolated(;
             s_range             = s_range,
             sprime_range        = sprime_range,
             labor_range         = labor_range,
@@ -475,7 +479,7 @@ function plot_policies_FOC_2(;
 
     average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:T)
 
-    FOC_2_solution = backwards_FOC_2(s_range        = s_range,
+    FOC_2_solution = backwards_FOC_2_interpolated(s_range        = s_range,
                             sprime_range            = sprime_range,
                             # consumption_range       = consumption_range,
                             labor_range             = labor_range,
@@ -492,11 +496,11 @@ function plot_policies_FOC_2(;
                             return_budget_balance 	= true::Bool)
     
     for policy in ["c","l","sprime"]
-        plot_policy_FOC_2(FOC_2_solution,policy)
+        plot_policy_FOC_2_interpolated(FOC_2_solution,policy)
     end
 end
 
-function plot_FOC_2_error(;
+function plot_FOC_2_error_interpolated(;
             s_range = s_range,
             sprime_range = sprime_range,
             labor_range = labor_range,
@@ -513,7 +517,7 @@ function plot_FOC_2_error(;
 
     average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
 	
-    numerical_solution = backwards_FOC_2(s_range = s_range,
+    numerical_solution = backwards_FOC_2_interpolated(s_range = s_range,
                             sprime_range            = sprime_range,
                             # consumption_range       = consumption_range,
                             labor_range             = labor_range,
@@ -553,10 +557,10 @@ function plot_FOC_2_error(;
             left_margin = 100Plots.px)
 	
 	if isdir("output")
-        Plots.savefig("output/numerical_FOC_2_approximation_error.png")
+        Plots.savefig("output/numerical_FOC_2_approximation_error_interpolated.png")
     else
         mkdir("output")
-        Plots.savefig("output/numerical_FOC_2_approximation_error.png")
+        Plots.savefig("output/numerical_FOC_2_approximation_error_interpolated.png")
     end
 
     nothing
