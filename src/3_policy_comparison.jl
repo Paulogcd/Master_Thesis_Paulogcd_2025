@@ -25,7 +25,7 @@ function policy_comparison_plot(;N = 100::Number,
     colors[5]   = colorant"blue"
     colors = vcat(colors, colorant"blue")
 
-    for (path,name,color) in zip(paths,names,colors)
+    Threads.@threads for (path,name,color) in collect(zip(paths,names,colors))
 
         probabilities_survival = deathless_population_simulation(N=N::Int64,
                                         T=T::Int64,

@@ -362,7 +362,7 @@ function plot_policy_full_numerical_interpolated(solution,policy)
         place_legend = :topleft
     elseif policy == "l"
         choice_variable = "Labour Supply"
-        place_legend = :bottomleft
+        place_legend = :topright
     else 
         @error("Policy not defined.")
     end

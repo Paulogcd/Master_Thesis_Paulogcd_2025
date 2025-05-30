@@ -395,7 +395,7 @@ function plot_policy_FOC_2_interpolated(solution,policy)
         place_legend = :topleft
     elseif policy == "l"
         choice_variable = "Labour Supply"
-        place_legend = :bottomleft
+        place_legend = :topright
     else 
         @error("Policy not defined.")
     end
@@ -498,55 +498,21 @@ function plot_policies_FOC_2_interpolated(;
     for policy in ["c","l","sprime"]
         plot_policy_FOC_2_interpolated(FOC_2_solution,policy)
     end
-end
-
-function plot_FOC_2_error_interpolated(;
-            s_range = s_range,
-            sprime_range = sprime_range,
-            labor_range = labor_range,
-            # consumption_range = consumption_range, 
-            N = 100, 
-            T = 100,
-            weather_history=pessimistic_path::Array{Float64})
-
-    probabilities_survival = deathless_population_simulation(N=N::Int64,
-                                    T=T::Int64,
-                                    weather_history=weather_history)
-
-    average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:100)
-
-    average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
 	
-    numerical_solution = backwards_FOC_2_interpolated(s_range = s_range,
-                            sprime_range            = sprime_range,
-                            # consumption_range       = consumption_range,
-                            labor_range             = labor_range,
-                            nperiods                = T,
-                            z 						= ones(T),
-                            β 						= 0.98,
-                            r 						= 0.017 .* ones(T),
-                            ρ 						= 1.50, 
-                            φ 						= 2.00,
-                            proba_survival 			= average_survival_probabilities::Array{Float64},
-                            w 						= probabilities_survival.weather_history::Array{Float64},
-                            h 						= average_health_status::Array{Float64}, 
-                            return_full_grid 		= false::Bool, 
-                            return_budget_balance 	= true::Bool)
-	
-	Plots.plot(s_range,numerical_solution.budget_balance[1,:])
+	plot_error = Plots.plot(s_range,FOC_2_solution.budget_balance[1,:])
 
 	for t in 2:100
-		Plots.plot!(s_range,numerical_solution.budget_balance[t,:], label = "Period: $t", linewidth=5)
+		Plots.plot!(plot_error, s_range,FOC_2_solution.budget_balance[t,:], label = "Period: $t", linewidth=5)
 	end
 
-	Plots.plot!(xaxis = "Initial savings",
+	Plots.plot!(plot_error, xaxis = "Initial savings",
                 yaxis = "Budget clearing",
                 title = "Consumption approximation by FOC",
                 legend = false, 
                 titlefontsize = 40)#, 
                 # ylimits=(-0.1,1))
     
-    Plots.plot!(
+    Plots.plot!(plot_error, 
             size = (2400, 1600),
             legendfontsize = 40,
             guidefontsize = 40,
@@ -562,8 +528,72 @@ function plot_FOC_2_error_interpolated(;
         mkdir("output")
         Plots.savefig("output/numerical_FOC_2_approximation_error_interpolated.png")
     end
-
-    nothing
 end
 
-# plot_FOC_2_error()
+# function plot_FOC_2_error_interpolated(;
+#             s_range = s_range,
+#             sprime_range = sprime_range,
+#             labor_range = labor_range,
+#             # consumption_range = consumption_range, 
+#             N = 100, 
+#             T = 100,
+#             weather_history=pessimistic_path::Array{Float64})
+# 
+#     probabilities_survival = deathless_population_simulation(N=N::Int64,
+#                                     T=T::Int64,
+#                                     weather_history=weather_history)
+# 
+#     average_survival_probabilities = mean(probabilities_survival.collective_probability_history[:,t] for t in 1:100)
+# 
+#     average_health_status = mean(probabilities_survival.collective_health_history[:,t] for t in 1:100)
+# 	
+#     numerical_solution = backwards_FOC_2_interpolated(s_range = s_range,
+#                             sprime_range            = sprime_range,
+#                             # consumption_range       = consumption_range,
+#                             labor_range             = labor_range,
+#                             nperiods                = T,
+#                             z 						= ones(T),
+#                             β 						= 0.98,
+#                             r 						= 0.017 .* ones(T),
+#                             ρ 						= 1.50, 
+#                             φ 						= 2.00,
+#                             proba_survival 			= average_survival_probabilities::Array{Float64},
+#                             w 						= probabilities_survival.weather_history::Array{Float64},
+#                             h 						= average_health_status::Array{Float64}, 
+#                             return_full_grid 		= false::Bool, 
+#                             return_budget_balance 	= true::Bool)
+# 	
+# 	Plots.plot(s_range,numerical_solution.budget_balance[1,:])
+# 
+# 	for t in 2:100
+# 		Plots.plot!(s_range,numerical_solution.budget_balance[t,:], label = "Period: $t", linewidth=5)
+# 	end
+# 
+# 	Plots.plot!(xaxis = "Initial savings",
+#                 yaxis = "Budget clearing",
+#                 title = "Consumption approximation by FOC",
+#                 legend = false, 
+#                 titlefontsize = 40)#, 
+#                 # ylimits=(-0.1,1))
+#     
+#     Plots.plot!(
+#             size = (2400, 1600),
+#             legendfontsize = 40,
+#             guidefontsize = 40,
+#             tickfontsize = 40,
+# 
+#             bottom_margin = 100Plots.px,
+#             top_margin = 100Plots.px,
+#             left_margin = 100Plots.px)
+# 	
+# 	if isdir("output")
+#         Plots.savefig("output/numerical_FOC_2_approximation_error_interpolated.png")
+#     else
+#         mkdir("output")
+#         Plots.savefig("output/numerical_FOC_2_approximation_error_interpolated.png")
+#     end
+# 
+#     nothing
+# end
+# 
+# # plot_FOC_2_error()

@@ -1,4 +1,4 @@
-function plot_lifetime_income_hand_to_mouth(;N=100, 
+function plot_lifetime_income_hand_to_mouth(;N=10_000, 
             T = 100, s_range = s_range,
             sprime_range = sprime_range,
             labor_range = labor_range,
@@ -94,7 +94,7 @@ end
 
 ### 
 
-function plot_lifetime_rich(;N = 100, T = 100, s_range = s_range,
+function plot_lifetime_rich(;N = 10_000, T = 100, s_range = s_range,
             sprime_range = sprime_range,
             labor_range = labor_range,
             consumption_range = consumption_range, 

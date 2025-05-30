@@ -28,7 +28,7 @@ module Master_Thesis_Paulogcd_2025
     """
     The `run` function generates all plots of the package, in an "output" folder.
     """
-    function run(;N = 100, T = 100,
+    function run(;N = 10_000, T = 100,
             s_range             = s_range,
             sprime_range        = sprime_range,
             labor_range         = labor_range,
@@ -76,10 +76,10 @@ module Master_Thesis_Paulogcd_2025
             sprime_range = sprime_range,
             # labor_range = labor_range,
             consumption_range = consumption_range)
-        @time plot_FOC_1_error(;N = N, T = T, s_range = s_range,
-            sprime_range = sprime_range,
-            # labor_range = labor_range,
-            consumption_range = consumption_range)
+        # @time plot_FOC_1_error(;N = N, T = T, s_range = s_range,
+        #     sprime_range = sprime_range,
+        #     # labor_range = labor_range,
+        #     consumption_range = consumption_range)
 
         @info("Plotting FOC-2 results.")
         @time plot_policies_FOC_2(;N = N, T = T, s_range = s_range,
@@ -87,11 +87,11 @@ module Master_Thesis_Paulogcd_2025
             labor_range = labor_range#,
             #consumption_range = consumption_range
             )
-        @time plot_FOC_2_error(N = N, T = T, s_range = s_range,
-            sprime_range = sprime_range,
-            labor_range = labor_range#,
-            # consumption_range = consumption_range
-            )
+        # @time plot_FOC_2_error(N = N, T = T, s_range = s_range,
+        #     sprime_range = sprime_range,
+        #     labor_range = labor_range#,
+        #     # consumption_range = consumption_range
+        #     )
 
         # Interpolated grid algorithms:
         @info("Plotting interpolated results - numerical")
@@ -110,10 +110,10 @@ module Master_Thesis_Paulogcd_2025
             sprime_range = sprime_range,
             # labor_range = labor_range,
             consumption_range = consumption_range)
-        @time plot_FOC_1_error_interpolated(;N = N, T = T, s_range = s_range,
-            sprime_range = sprime_range,
-            # labor_range = labor_range,
-            consumption_range = consumption_range)
+        # @time plot_FOC_1_error_interpolated(;N = N, T = T, s_range = s_range,
+        #     sprime_range = sprime_range,
+        #     # labor_range = labor_range,
+        #     consumption_range = consumption_range)
 
         @info("Plotting interpolated results - FOC-2")
         @time plot_policies_FOC_2_interpolated(;N = N, T = T, s_range = s_range,
@@ -121,11 +121,11 @@ module Master_Thesis_Paulogcd_2025
             labor_range = labor_range#,
             #consumption_range = consumption_range
             )
-        @time plot_FOC_2_error_interpolated(N = N, T = T, s_range = s_range,
-            sprime_range = sprime_range,
-            labor_range = labor_range#,
-            # consumption_range = consumption_range
-            )
+        # @time plot_FOC_2_error_interpolated(N = N, T = T, s_range = s_range,
+        #     sprime_range = sprime_range,
+        #     labor_range = labor_range#,
+        #     # consumption_range = consumption_range
+        #     )
 
         # Policy comparison: 
         @info("Plotting policy comparison results.")
@@ -148,7 +148,7 @@ module Master_Thesis_Paulogcd_2025
             consumption_range = consumption_range)
         end
         @info("All plots have been generated.") # 22 minutes with scale = 0.8
-        # 1328.173726 seconds (779.15 M allocations: 1.843 TiB, 2.42% gc time, 0.97% compilation time: 17% of which was recompilation)
+        # 2565.023485 seconds (22.62 G allocations: 2.753 TiB, 3.11% gc time, 0.51% compilation time: 19% of which was recompilation)
     end
     @info("run function compiled")
 

@@ -149,7 +149,7 @@ begin
     """
     This function plots the demographic evolution of the four different scenarios.
     """
-    function plot_demographic_comparison(;N = 100::Number, T = 100)
+    function plot_demographic_comparison(;N = 10_000::Number, T = 100)
         
         Plots.plot(xaxis = "Year", yaxis = "Individuals still alive")
         weather_histories = [pessimistic_path, intermediate_path, optimistic_path, historical_path]
@@ -175,7 +175,7 @@ begin
             top_margin = 100Plots.px,
             left_margin = 100Plots.px, 
             fontfamily = "Times", 
-            legend = :bottomleft)
+            legend = :topright)
 
         if isdir("output")
             Plots.savefig("output/demographic_comparison.png")
@@ -246,7 +246,7 @@ begin
         return(results)
     end
 
-    function plot_probabilities_comparison(;N = 1000::Number, T = 100::Number)
+    function plot_probabilities_comparison(;N = 10_000::Number, T = 100::Number)
 
         Plots.plot(xaxis = "Year", yaxis = "Average survival probability")
         weather_histories = [pessimistic_path, intermediate_path, optimistic_path, historical_path]
@@ -291,7 +291,7 @@ end
 
 # Simple scenario plot: 
 begin 
-    function plot_population_one_path(;N=100, T=100)
+    function plot_population_one_path(;N = 10_000, T=100)
         population = population_simulation(;N = N,T = T, weather_history= 0.61 .* ones(T))
         Plots.plot(sum(population.collective_living_history), linewidth = 5)
         
@@ -318,7 +318,7 @@ begin
     #  plot_population_evolution(N = 10_000)
 
     function plot_probability_one_path()
-        population = deathless_population_simulation(N = 100, weather_history = 0.61 .* ones(100))
+        population = deathless_population_simulation(N = 10_000, weather_history = 0.61 .* ones(100))
         
         Plots.plot(mean(population.collective_probability_history[:,t] for t in 1:100), linewidth=5)
 

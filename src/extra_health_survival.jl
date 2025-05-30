@@ -40,7 +40,7 @@ function extra_health_survival()
     Plots.plot!(ev, 	label = "Excellent",	linewidth=5, color = colors[5])
     Plots.plot!(xaxis = "Age",
 				yaxis = "Probability")
-	Plots.plot!(legend = :bottomleft)
+	Plots.plot!(legend = :topright)
 
 	Plots.plot!(
 		size = (2400, 1600),
